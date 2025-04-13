@@ -1,0 +1,29 @@
+import requests
+
+def fetch_places_data(api_key, location, radius, keyword):
+    url = f"https://maps.googleapis.com/maps/api/place/textsearch/json?query={keyword}&location={location}&radius={radius}&key={api_key}"
+    
+    response = requests.get(url)
+    results = response.json().get('results', [])
+    
+    leads = []
+    
+    for result in results:
+        business_info = {
+            'name': result.get('name'),
+            'address': result.get('formatted_address'),
+            'place_id': result.get('place_id')
+        }
+        leads.append(business_info)
+    
+    return leads
+
+# Example usage:
+API_KEY = "YOUR_GOOGLE_PLACES_API_KEY"
+LOCATION = "29.7604,-95.3698"  # Coordinates for Houston
+RADIUS = 5000  # 5km radius
+KEYWORD = "AT&T Fiber Internet"
+
+leads = fetch_places_data(API_KEY, LOCATION, RADIUS, KEYWORD)
+for lead in leads:
+    print(lead)
